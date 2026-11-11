@@ -1,11 +1,19 @@
-import { Button, Form, Input } from "antd";
+import { Button, Form, Input, message } from "antd";
 import { Link } from "react-router-dom";
-import { register } from "../calls/authCalls.js"
+import { register } from "../calls/authCalls.js";
 
 const onSubmit = async (values) => {
-  const userData = await register(values);
-  console.log(userData)
-}
+  try {
+    const userData = await register(values);
+    if (userData.success) {
+      message.success(userData.message);
+    } else {
+      message.error(userData.message);
+    }
+  } catch (error) {
+    console.log(error.message);
+  }
+};
 
 const Register = () => (
   <main className="auth-page">

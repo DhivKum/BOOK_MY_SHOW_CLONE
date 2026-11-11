@@ -14,3 +14,13 @@ export const register = async(values) => {
         console.log(err)
     }   
 }
+
+export const login = async(values) => {
+    try{
+        const response = await api.post('/api/auth/login', values)
+        return response.data
+    }
+    catch(err){
+        console.log(err)
+    }   
+}
