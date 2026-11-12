@@ -1,22 +1,26 @@
 import { Button, Checkbox, Form, Input, message } from "antd";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { login } from "../calls/authCalls";
 
-const onSubmit = async (values) => {
-  try {
+function Login() {
+  const navigate = useNavigate();
+
+  const onSubmit = async (values) => {
+    try {
       const userData = await login(values);
       if (userData.success) {
         message.success(userData.message);
+        navigate('/home');
       } else {
         message.error(userData.message);
       }
     } catch (error) {
       console.log(error.message);
     }
-};
+  };
 
-const Login = () => (
-  <main className="auth-page">
+  return (
+    <main className="auth-page">
     <section className="auth-card" aria-labelledby="login-title">
       <div className="brand-mark">BMS</div>
       <p className="eyebrow">Welcome back</p>
@@ -66,7 +70,8 @@ const Login = () => (
         New to Book My Show? <Link to="/register">Create an account</Link>
       </p>
     </section>
-  </main>
-);
+    </main>
+  );
+}
 
 export default Login;
