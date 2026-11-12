@@ -3,6 +3,7 @@ const User = require("../models/user.model.js");
 const bcrypt = require("bcryptjs");
 const userRouter = express.Router();
 const jwt = require('jsonwebtoken')
+const isAuth = require('../middlewares/authMiddleware.js')
 
 //SignUp Route
 userRouter.post("/register", async (req, res) => {
@@ -61,15 +62,28 @@ userRouter.post("/login", async (req, res) => {
 
     const token = jwt.sign({userId : user._id}, process.env.JWT_SECRET, {expiresIn:'5d'})
 
+    res.cookie('jwtToken', token, {
+      httpOnly : true, 
+    })
 
     res.send({
       success: true,
       message: "You have successfully logged in!",
-      token : token
     });
   } catch (err) {
     res.status(500).json({ message: err });
   }
 });
+
+//Relogin Page
+userRouter.get("/current-user", isAuth, async(req, res) => {
+  const userId = req.userId
+  res.send(
+    {
+      userId : userId,
+      message : "User Identified"
+    }
+  )
+})
 
 module.exports = userRouter;

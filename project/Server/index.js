@@ -1,6 +1,7 @@
 const express = require("express");
 const dbConfig = require('./dbConfig.js')
 const cors = require('cors')
+const cookieParser = require('cookie-parser')
 
 const app = express(); 
 dbConfig.connectDB();
@@ -11,6 +12,8 @@ app.use(express.json())
 app.use(cors({
     origin : 'http://localhost:5173'
 }))
+
+app.use(cookieParser())
 
 app.use('/api/auth', userRouter)
 
