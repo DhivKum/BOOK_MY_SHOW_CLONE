@@ -69,6 +69,7 @@ userRouter.post("/login", async (req, res) => {
     res.send({
       success: true,
       message: "You have successfully logged in!",
+      user : user
     });
   } catch (err) {
     res.status(500).json({ message: err });
@@ -78,12 +79,18 @@ userRouter.post("/login", async (req, res) => {
 //Relogin Page
 userRouter.get("/current-user", isAuth, async(req, res) => {
   const userId = req.userId
-  res.send(
-    {
-      userId : userId,
-      message : "User Identified"
-    }
-  )
+  if(userId === undefined)
+  {
+    return res.status(401).json({message : "Not Authorized! No Token exists"})
+  }
+  try{
+    const verifiedUser = await User.findById(userId).select("-password")
+    res.json(verifiedUser)
+  }
+  catch(error)
+  {
+    return res.status(500).json({message:"Server error"})
+  }
 })
 
 module.exports = userRouter;
